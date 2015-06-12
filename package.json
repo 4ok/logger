@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/4ok/logger/issues"
   },
-  "homepage": "https://github.com/4ok/logger"
+  "homepage": "https://github.com/4ok/logger",
+  "dependencies": {
+    "winston": "^1.0.0"
+  }
 }
