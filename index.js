@@ -1,52 +1,56 @@
 var winston = require('winston');
 
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            colorize:    true,
+            prettyPrint: true
+        })
+    ]
+});
+
+function _log(level, args) {
+    args = Array.prototype.slice.call(args);
+
+    logger[level].apply(null, args);
+
+    return this;
+}
+
 var Logger = function (options) {
 
     if (undefined === options) {
         options = {};
     }
 
-    var logger = new (winston.Logger)({
-        transports: [
-            new (winston.transports.Console)({
-                colorize:    true,
-                prettyPrint: true
-            })
-        ]
-    });
-
     this.log = function () {
         var level = arguments[0];
         var args  = Array.prototype.slice.call(arguments, 1);
 
-        _log(level, args);
+        return _log(level, args);
     };
 
     this.info = function () {
-        _log('info', arguments);
+        return _log('info', arguments);
     };
 
     this.warn = function () {
-        _log('warn', arguments);
+        return _log('warn', arguments);
     };
 
     this.error = function () {
-        _log('error', arguments);
+        return _log('error', arguments);
     };
 
     this.profile = function (id) {
-        logger.profile(id);
+        return logger.profile(id);
     };
 
-    this.separator = function () {
-        this.info(new Array(50).join('='));
+    this.break = function (char) {
+        this.info(new Array(50).join(char || '='));
+
+        return this;
     };
-
-    var _log = function (level, args) {
-        args = Array.prototype.slice.call(args);
-
-        logger[level].apply(null, args);
-    }
 };
 
 module.exports = function (options) {
