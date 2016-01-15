@@ -1,57 +1,63 @@
+'use strict';
+
 var winston = require('winston');
 
-var logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            colorize:    true,
-            prettyPrint: true
-        })
-    ]
-});
+class Logger {
 
-function _log(level, args) {
-    args = Array.prototype.slice.call(args);
-
-    logger[level].apply(null, args);
-
-    return this;
-}
-
-var Logger = function (options) {
-
-    if (undefined === options) {
-        options = {};
+    constructor(options) {
+        this._logger = this._getLogger(options)
     }
 
-    this.log = function () {
+    log() {
         var level = arguments[0];
         var args  = Array.prototype.slice.call(arguments, 1);
 
-        return _log(level, args);
-    };
+        return this._log(level, args);
+    }
 
-    this.info = function () {
-        return _log('info', arguments);
-    };
+    info() {
+        return this._log('info', arguments);
+    }
 
-    this.warn = function () {
-        return _log('warn', arguments);
-    };
+    warn() {
+        return this._log('warn', arguments);
+    }
 
-    this.error = function () {
-        return _log('error', arguments);
-    };
+    error() {
+        return this._log('error', arguments);
+    }
 
-    this.profile = function (id) {
-        return logger.profile(id);
-    };
+    profile(id) {
+        return this._logger.profile(id);
+    }
 
-    this.break = function (char) {
+    break(char) {
         this.info(new Array(50).join(char || '='));
 
         return this;
-    };
-};
+    }
+
+    _log(level, args) {
+        args = Array.prototype.slice.call(args);
+
+        this._logger[level].apply(null, args);
+
+        return this;
+    }
+
+    _getLogger(options) {
+        options = options || {};
+
+        return new (winston.Logger)({
+            transports: [
+                new (winston.transports.Console)({
+                    colorize:    true,
+                    prettyPrint: true
+                })
+            ]
+        });
+    }
+}
 
 module.exports = function (options) {
     var result;
@@ -61,4 +67,4 @@ module.exports = function (options) {
     }
 
     return result;
-};
+}
