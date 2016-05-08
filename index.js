@@ -1,16 +1,16 @@
 'use strict';
 
-var winston = require('winston');
+const winston = require('winston');
 
-class Logger {
+class LoggerClass {
 
     constructor(options) {
-        this._logger = this._getLogger(options)
+        this._logger = this._getLogger(options);
     }
 
     log() {
-        var level = arguments[0];
-        var args  = Array.prototype.slice.call(arguments, 1);
+        const level = arguments[0];
+        const args = Array.prototype.slice.call(arguments, 1);
 
         return this._log(level, args);
     }
@@ -49,22 +49,16 @@ class Logger {
         options = options || {};
 
         return new (winston.Logger)({
-            transports: [
+            transports : [
                 new (winston.transports.Console)({
-                    colorize:    true,
-                    prettyPrint: true
-                })
-            ]
+                    colorize : true,
+                    prettyPrint : true,
+                }),
+            ],
         });
     }
 }
 
-module.exports = function (options) {
-    var result;
-
-    if (!(this instanceof Logger)) {
-        result = new Logger(options);
-    }
-
-    return result;
-}
+module.exports = function Logger(options) {
+    return new LoggerClass(options);
+};
