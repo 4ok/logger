@@ -1,5 +1,3 @@
-'use strict';
-
 const winston = require('winston');
 
 class LoggerClass {
@@ -45,9 +43,7 @@ class LoggerClass {
         return this;
     }
 
-    _getLogger(options) {
-        options = options || {};
-
+    _getLogger() {
         return new (winston.Logger)({
             transports : [
                 new (winston.transports.Console)({
