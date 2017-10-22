@@ -1,4 +1,4 @@
-const winston = require('winston');
+var winston = require('winston');
 
 class LoggerClass {
 
