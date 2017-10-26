@@ -1,60 +1,49 @@
-var winston = require('winston');
+const winston = require('winston');
+
+const logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            colorize: true,
+            prettyPrint: true,
+        }),
+    ],
+});
+
+const BREAK_LINE_LENGTH = 50;
 
 class LoggerClass {
 
-    constructor(options) {
-        this._logger = this._getLogger(options);
+    info(...args) {
+        return this._log('info', [...args]);
     }
 
-    log() {
-        const level = arguments[0];
-        const args = Array.prototype.slice.call(arguments, 1);
-
-        return this._log(level, args);
+    warn(...args) {
+        return this._log('warn', [...args]);
     }
 
-    info() {
-        return this._log('info', arguments);
-    }
-
-    warn() {
-        return this._log('warn', arguments);
-    }
-
-    error() {
-        return this._log('error', arguments);
+    error(...args) {
+        return this._log('error', [...args]);
     }
 
     profile(id) {
-        return this._logger.profile(id);
+        logger.profile(id);
+
+        return this;
     }
 
     break(char) {
-        this.info(new Array(50).join(char || '='));
+        this.info(new Array(BREAK_LINE_LENGTH).join(char || '='));
 
         return this;
     }
 
-    _log(level, args) {
-        args = Array.prototype.slice.call(args);
-
-        this._logger[level].apply(null, args);
+    _log(level, params) {
+        logger[level].apply(null, params);
 
         return this;
-    }
-
-    _getLogger() {
-        return new (winston.Logger)({
-            transports : [
-                new (winston.transports.Console)({
-                    colorize : true,
-                    prettyPrint : true,
-                }),
-            ],
-        });
     }
 }
 
-module.exports = function Logger(options) {
-    return new LoggerClass(options);
+module.exports = function Logger() {
+    return new LoggerClass();
 };
